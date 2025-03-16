@@ -1,3 +1,5 @@
+![CI status push main](https://github.com/AntonNovozhilov/kittygram_final/actions/workflows/main.yml/badge.svg?branch=main&event=push)
+
 ## Что может это проект:
 - Добавлять , редактировать , удалять , просматривать котов.
 - Добавлять , редактировать уже сущществующие достижения для котов.
@@ -78,6 +80,7 @@ location / {
 Файл workflows находится в диреткори /.github/workflows/
 
 Для запуска вам нужно на гите в action установить секреты 
+```
 DOCKER_USERNAME                # имя пользователя в DockerHub
 DOCKER_PASSWORD                # пароль пользователя в DockerHub
 HOST                           # ip_address сервера
@@ -87,7 +90,6 @@ SSH_PASSPHRASE                 # кодовая фраза (пароль) для
 
 TELEGRAM_TO                    # id телеграм-аккаунта (можно узнать у @userinfobot, команда /start)
 TELEGRAM_TOKEN                 # токен бота (получить токен можно у @BotFather, /token, имя бота)
-
-![CI status push main](https://github.com/AntonNovozhilov/kittygram_final/actions/workflows/WORKFLOW-FILE/badge.svg?branch=main&event=push)
+```
 
 [Автор](https://github.com/AntonNovozhilov)
