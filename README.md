@@ -1,26 +1,84 @@
-#  Как работать с репозиторием финального задания
+##Что может это проект:##
+- Добавлять , редактировать , удалять , просматривать котов.
+- Добавлять , редактировать уже сущществующие достижения для котов.
 
-## Что нужно сделать
+##Как работать с проектом.##
+1. Скопируйте репозиторий к себе на компьютер с помощью команды 
+'git clone git@github.com:AntonNovozhilov/kittygram_final.git'
 
-Настроить запуск проекта Kittygram в контейнерах и CI/CD с помощью GitHub Actions
+2. Создайте файл .env и заполните своими данные, данные которые необходимо заполнить можете посмотреть в корневой папке в файле .env.example
 
-## Как проверить работу с помощью автотестов
+3. Создайте Docker images
 
-В корне репозитория создайте файл tests.yml со следующим содержимым:
-```yaml
-repo_owner: ваш_логин_на_гитхабе
-kittygram_domain: полная ссылка (https://доменное_имя) на ваш проект Kittygram
-taski_domain: полная ссылка (https://доменное_имя) на ваш проект Taski
-dockerhub_username: ваш_логин_на_докерхабе
-```
+'''cd frontend
+docker build -t <Ваш ник на dockerhub>/kittygram_frontend .
+cd ../backend
+docker build -t <Ваш ник на dockerhub>/kittygram_backend .
+cd ../nginx
+docker build -t <Ваш ник на dockerhub>/kittygram_gateway . '''
 
-Скопируйте содержимое файла `.github/workflows/main.yml` в файл `kittygram_workflow.yml` в корневой директории проекта.
+4. Загрузите образы на Dockerhub
 
-Для локального запуска тестов создайте виртуальное окружение, установите в него зависимости из backend/requirements.txt и запустите в корневой директории проекта `pytest`.
+пример команды 
+'docker push <Ваш ник на dockerhub>/kittygram_frontend'
 
-## Чек-лист для проверки перед отправкой задания
+5. Подключитесь к удаленному серверу 
+'ssh -i путь_до_файла_с_SSH_ключом/название_файла_с_SSH_ключом имя_пользователя@ip_адрес_сервера '
 
-- Проект Taski доступен по доменному имени, указанному в `tests.yml`.
-- Проект Kittygram доступен по доменному имени, указанному в `tests.yml`.
-- Пуш в ветку main запускает тестирование и деплой Kittygram, а после успешного деплоя вам приходит сообщение в телеграм.
-- В корне проекта есть файл `kittygram_workflow.yml`.
+6. Создайте на сервере директорию 
+mkdir название директории
+
+7. Установите Docker compose 
+'''sudo apt update
+sudo apt install curl
+curl -fSL https://get.docker.com -o get-docker.sh
+sudo sh ./get-docker.sh
+sudo apt-get install docker-compose-plugin'''
+
+8. Скопируйте на сервер docker-compose.production.yml
+
+'''scp -i path_to_SSH/SSH_name docker-compose.production.yml username@server_ip:/home/username/kittygram/docker-compose.production.yml
+* ath_to_SSH — путь к файлу с SSH-ключом;
+* SSH_name — имя файла с SSH-ключом (без расширения);
+* username — ваше имя пользователя на сервере;
+* server_ip — IP вашего сервера.'''
+
+9. Запустите docker compose в режиме демона
+'sudo docker compose -f docker-compose.production.yml up -d'
+
+10. Выполните миграции , соберите статику, скориуйте ее в директорию бекенда
+'''sudo docker compose -f docker-compose.production.yml exec backend python manage.py migrate
+sudo docker compose -f docker-compose.production.yml exec backend python manage.py collectstatic
+sudo docker compose -f docker-compose.production.yml exec backend cp -r /app/collected_static/. /backend_static/static/'''
+
+11. На сервере в главной директории откройте конфг nginx через nano
+'sudo nano /etc/nginx/sites-enabled/default'
+
+12. Замените секцию location 
+
+'''location / {
+    proxy_set_header Host $http_host;
+    proxy_pass http://127.0.0.1:9000;
+}'''
+
+13. перезапустите nginx 
+'sudo service nginx reload'
+
+14. Настройте CI и CD 
+Файл workflows находится в диреткори /.github/workflows/
+
+Для запуска вам нужно на гите в action установить секреты 
+DOCKER_USERNAME                # имя пользователя в DockerHub
+DOCKER_PASSWORD                # пароль пользователя в DockerHub
+HOST                           # ip_address сервера
+USER                           # имя пользователя
+SSH_KEY                        # приватный ssh-ключ (cat ~/.ssh/id_rsa)
+SSH_PASSPHRASE                 # кодовая фраза (пароль) для ssh-ключа
+
+TELEGRAM_TO                    # id телеграм-аккаунта (можно узнать у @userinfobot, команда /start)
+TELEGRAM_TOKEN                 # токен бота (получить токен можно у @BotFather, /token, имя бота)
+
+![CI status push main]
+(https://github.com/AntonNovozhilov/kittygram_final/actions/workflows/WORKFLOW-FILE/badge.svg?branch=main&event=push)
+
+[Автор](https://github.com/AntonNovozhilov)
