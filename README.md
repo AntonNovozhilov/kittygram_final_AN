@@ -1,21 +1,21 @@
-##Что может это проект:##
+## Что может это проект:
 - Добавлять , редактировать , удалять , просматривать котов.
 - Добавлять , редактировать уже сущществующие достижения для котов.
 
-##Как работать с проектом.##
+## Как работать с проектом.
 1. Скопируйте репозиторий к себе на компьютер с помощью команды 
-'git clone git@github.com:AntonNovozhilov/kittygram_final.git'
+`git clone git@github.com:AntonNovozhilov/kittygram_final.git`
 
 2. Создайте файл .env и заполните своими данные, данные которые необходимо заполнить можете посмотреть в корневой папке в файле .env.example
 
 3. Создайте Docker images
 
-'''cd frontend
+```cd frontend
 docker build -t <Ваш ник на dockerhub>/kittygram_frontend .
 cd ../backend
 docker build -t <Ваш ник на dockerhub>/kittygram_backend .
 cd ../nginx
-docker build -t <Ваш ник на dockerhub>/kittygram_gateway . '''
+docker build -t <Ваш ник на dockerhub>/kittygram_gateway . ```
 
 4. Загрузите образы на Dockerhub
 
@@ -78,7 +78,6 @@ SSH_PASSPHRASE                 # кодовая фраза (пароль) для
 TELEGRAM_TO                    # id телеграм-аккаунта (можно узнать у @userinfobot, команда /start)
 TELEGRAM_TOKEN                 # токен бота (получить токен можно у @BotFather, /token, имя бота)
 
-![CI status push main]
-(https://github.com/AntonNovozhilov/kittygram_final/actions/workflows/WORKFLOW-FILE/badge.svg?branch=main&event=push)
+![CI status push main](https://github.com/AntonNovozhilov/kittygram_final/actions/workflows/WORKFLOW-FILE/badge.svg?branch=main&event=push)
 
 [Автор](https://github.com/AntonNovozhilov)
